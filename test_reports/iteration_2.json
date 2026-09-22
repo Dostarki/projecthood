@@ -1,0 +1,37 @@
+{
+  "summary": "Kısa backend smoke+bireysel birim testleri tamamlandı; eski uzun e2e çalıştırılmadı.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_backend_short_smoke.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "İstenirse LOS bağımlı flamethrower testi için deterministic geometry fixture eklenebilir (şu an kısa smoke kapsamında yeterli)."
+  ],
+  "critical_code_review_comments": [
+    "Game.persist senkron test ortamında event loop yoksa RuntimeError üretir; uygulama akışında sorun görünmedi, testte izolasyon için no-op override kullanıldı."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_backend_short_smoke.py",
+    "/app/test_reports/iteration_2.json"
+  ],
+  "success_rate": {
+    "backend": "100% (6/6)",
+    "frontend": "N/A (backend-only scope)"
+  },
+  "seed_data_creation": "Yok",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "main_agent_can_self_test": true,
+  "test_credentials": "Auth akışı test edilmedi; /app/memory/test_credentials.md içerik olarak boş (yalnız başlıklar var).",
+  "context_for_next_testing_agent": "Sadece /app/backend/tests/test_backend_short_smoke.py çalıştırıldı. Uzun websocket e2e dosyası (test_api_ws_integration.py) kasıtlı olarak çalıştırılmadı. Public URL üzerinden /api/world, /api/weapons ve 2 audio HTTP örneği doğrulandı.",
+  "rca of the issue": "Açık ürün hatası tespit edilmedi. İlk test yazımında iki false-negative vardı: (1) zombie pursuit end için 5.1m sonrası zombie önce yaklaşabildiği için eşik tekrar altına düşüyordu; mesafe 8.0m ile doğrulandı. (2) combat testinde ölüm tetiklenince Game.persist test loop'u olmadan create_task hatası üretiyordu; birim test izolasyonu için game.persist no-op yapıldı."
+}

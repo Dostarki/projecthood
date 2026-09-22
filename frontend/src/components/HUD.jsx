@@ -1,0 +1,41 @@
+import { useEffect, useRef, useState } from 'react';
+import { Settings2, Trophy, Heart, Zap, Crosshair, Skull, Volume2, VolumeX, ShieldAlert, RotateCcw, ArrowRight, Navigation, Building2 } from 'lucide-react';
+import { Button } from './ui/button';
+import { WEAPONS } from './Lobby';
+
+const Minimap = ({ state, engine }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current; if (!c || !state) return; const ctx = c.getContext('2d'); const size = 160, scale = 1.5, me = state.me;
+    ctx.clearRect(0, 0, size, size); ctx.fillStyle = '#19221d'; ctx.fillRect(0, 0, size, size);
+    ctx.save(); ctx.translate(80, 80); ctx.rotate(-Math.PI/4); ctx.translate(-me.x*scale, -me.z*scale);
+    ctx.fillStyle = '#424a42'; for (let i = -800; i <= 800; i += 80) { ctx.fillRect(i*scale-8, me.z*scale-200, 16, 400); ctx.fillRect(me.x*scale-200, i*scale-8, 400, 16); }
+    ctx.fillStyle='#8c9f78';(engine.current?.nearby||[]).forEach(c=>c.houses.filter(h=>h.enterable).forEach(h=>{ctx.fillRect((h.x-h.w/2)*scale,(h.z-h.d/2)*scale,h.w*scale,h.d*scale);ctx.fillStyle='#dce4c3';ctx.fillRect(h.door.x*scale-2,h.door.z*scale-2,4,4);ctx.fillStyle='#8c9f78';}));
+    ctx.fillStyle = '#df7160'; state.zombies.forEach(z => { ctx.beginPath(); ctx.arc(z.x*scale, z.z*scale, 2, 0, Math.PI*2); ctx.fill(); });
+    ctx.fillStyle = '#98c1cf'; state.players.forEach(p => { ctx.beginPath(); ctx.arc(p.x*scale, p.z*scale, 3, 0, Math.PI*2); ctx.fill(); });
+    ctx.fillStyle = '#e1e8b8'; ctx.translate(me.x*scale, me.z*scale); ctx.rotate(-me.angle); ctx.beginPath(); ctx.moveTo(0, 6); ctx.lineTo(-4, -4); ctx.lineTo(4, -4); ctx.closePath(); ctx.fill(); ctx.restore();
+  }, [state,engine]);
+  return <div className="minimap" data-testid="minimap"><span className="map-north">K</span><canvas ref={ref} width="160" height="160" data-testid="minimap-canvas" /><span className="minimap-location" data-testid="minimap-location">WESTFALL <Navigation size={10} /></span></div>;
+};
+
+export const HUD = ({ state, ping, engine, onSettings, onLeaderboard, onRespawn, onLeave, muted, toggleMuted }) => {
+  const [feed, setFeed] = useState([]);
+  const me = state?.me, weapon = WEAPONS.find(w => w.id === me?.weapon);
+  useEffect(() => { if (!state) return; const kills = state.events.filter(e => e.type === 'kill'); if (kills.length) setFeed(old => [...kills.map((e, i) => ({ ...e, time: Date.now(), key: `${Date.now()}-${i}` })), ...old].slice(0, 4)); }, [state]);
+  useEffect(() => { const timer = setInterval(() => setFeed(old => old.filter(e => Date.now()-e.time < 6000)), 1000); return () => clearInterval(timer); }, []);
+  if (!me) return <div className="connecting-hud" data-testid="connecting-hud">BÖLGEYE GİRİLİYOR…</div>;
+  return <div className="hud" data-testid="game-hud">
+    <div className="hud-top-left"><div className="hud-wordmark" data-testid="hud-brand">DEADZONE<span>LIVE</span></div><div className="hud-connection" data-testid="hud-connection"><i className="status-dot" /><span>{state.online} / 200</span><span>{ping} ms</span></div></div>
+    <div className="hud-compass" data-testid="hud-compass"><span>B</span><i /><span>KB</span><i /><strong>K</strong><i /><span>KD</span><i /><span>D</span><div className="compass-pointer">▼</div></div>
+    <div className="hud-buttons"><button data-testid="hud-leaderboard-button" title="Sıralama" aria-label="Sıralama" onClick={onLeaderboard}><Trophy size={19} /></button><button data-testid="hud-sound-button" title="Ses" aria-label="Ses aç/kapat" onClick={toggleMuted}>{muted ? <VolumeX size={19} /> : <Volume2 size={19} />}</button><button data-testid="hud-settings-button" title="Ayarlar" aria-label="Ayarlar" onClick={onSettings}><Settings2 size={19} /></button></div>
+    <div className="kill-feed" data-testid="kill-feed">{feed.map(e => <div key={e.key} data-testid={`kill-feed-${e.key}`}><span>{e.name}</span><Crosshair size={12} /><span className={e.zombie ? '' : 'pvp-name'}>{e.target}</span></div>)}</div>
+    {me.interior&&<div className="interior-notice" data-testid="interior-notice"><Building2 size={17}/><span>{me.interior}<small>İÇ MEKÂN · HASAR KORUMASI YOK</small></span></div>}
+    {me.protected > 0 && me.hp > 0 && <div className="spawn-protection" data-testid="spawn-protection"><ShieldAlert size={15} /> GÜVENLİ BAŞLANGIÇ <b>{me.awaiting_input ? 'HAZIR' : `${Math.ceil(me.protected)}s`}</b></div>}
+    <div className="hud-left-bottom"><Minimap state={state} engine={engine}/><div className="vitals"><div className="survivor-label" data-testid="hud-player-name"><i className="status-dot" /> {me.name}<span>HAYATTA</span></div><div className="vital-row"><Heart size={16} /><div className="vital-track health"><i style={{ width: `${me.hp}%` }} /></div><b data-testid="hud-health-value">{me.hp}</b></div><div className="vital-row"><Zap size={15} /><div className="vital-track stamina"><i style={{ width: `${me.stamina}%` }} /></div><b data-testid="hud-stamina-value">{Math.round(me.stamina)}</b></div></div></div>
+    <div className="hud-score"><span>TOPLAM PUAN</span><strong data-testid="hud-score-count">{me.score.toLocaleString('tr-TR')}</strong><span className="kill-count" data-testid="hud-kill-count"><Skull size={14} /> {me.kills} ENFEKTE <span> / </span>{me.pvp} OYUNCU</span></div>
+    <div className="hud-ammo"><div className="hud-weapon-name" data-testid="hud-weapon-name">{weapon?.name}<span>{weapon?.type}</span></div><div className="ammo-numbers" data-testid="hud-ammo-count"><strong>{String(me.ammo).padStart(2, '0')}</strong><span>/ {me.reserve}</span></div><div className="ammo-bottom" data-testid="reload-status">{me.reloading > 0 ? <><RotateCcw size={13} className="spin" /> ŞARJÖR DEĞİŞİYOR {me.reloading.toFixed(1)}s</> : <><span className="auto-label">● {me.weapon==='flamethrower'?'YAKIT':me.weapon==='rocket'?'ROKET':'OTOMATİK'}</span><button data-testid="reload-button" onClick={() => { engine.current.keys.KeyR = true;engine.current.requestReload();engine.current.publishInput?.(); }}><kbd>R</kbd> ŞARJÖR</button></>}</div></div>
+    <div className="game-controls-strip" data-testid="game-controls-strip"><span><kbd>W A S D</kbd> HAREKET</span><span><kbd>SHIFT</kbd> KOŞU</span><span><kbd>R</kbd> ŞARJÖR</span><span><kbd>ESC</kbd> MENÜ</span><span className="fire-status"><ShieldAlert size={11} /> DOST ATEŞİ AÇIK</span></div>
+    <div className="mobile-controls"><div className="mobile-dpad">{[['up', 0, -1, '↑'], ['left', -1, 0, '←'], ['down', 0, 1, '↓'], ['right', 1, 0, '→']].map(([key, x, y, label]) => <button key={key} className={`dpad-${key}`} data-testid={`mobile-move-${key}`} aria-label={`Hareket ${label}`} onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); engine.current.touchMove = { x, y }; engine.current.publishInput?.(); }} onPointerUp={() => { engine.current.touchMove = null; engine.current.publishInput?.(); }} onPointerCancel={() => { engine.current.touchMove = null; engine.current.publishInput?.(); }}>{label}</button>)}</div><button className="mobile-fire" data-testid="mobile-fire" aria-label="Ateş" onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); engine.current.touchFire = true; engine.current.publishInput?.(); }} onPointerUp={() => { engine.current.touchFire = false; engine.current.publishInput?.(); }} onPointerCancel={() => { engine.current.touchFire = false; engine.current.publishInput?.(); }}><Crosshair size={28} /></button></div>
+    {me.hp <= 0 && <div className="death-overlay" data-testid="death-overlay"><div className="death-content"><Skull size={44} strokeWidth={1} /><span className="eyebrow">SİNYAL KAYBOLDU</span><h1 data-testid="death-title">SON DURAK.</h1><p data-testid="death-killer">{me.killer} tarafından öldürüldün.</p><div className="death-stats" data-testid="death-stats"><div><strong>{me.score}</strong><span>PUAN</span></div><div><strong>{me.kills}</strong><span>ENFEKTE</span></div><div><strong>{Math.floor(me.survived/60)}:{String(me.survived%60).padStart(2, '0')}</strong><span>HAYATTA KALMA</span></div></div><Button className="start-button" data-testid="respawn-button" onClick={onRespawn}><RotateCcw size={19} /> YENİDEN DOĞ <ArrowRight size={19} /></Button><button className="death-leave" data-testid="death-leave-button" onClick={onLeave}>LOBİYE DÖN</button></div></div>}
+  </div>;
+};

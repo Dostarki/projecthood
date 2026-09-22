@@ -1,0 +1,29 @@
+import { useEffect, useState } from 'react';
+import { Trophy, Radio, Volume2, Monitor, LogOut, RefreshCw, Crosshair } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Button } from './ui/button';
+import { API } from '../hooks/useSession';
+
+export const GamePanels = ({ panel, close, state, inGame, leave, muted, setMuted, volume, setVolume, quality, setQuality }) => {
+  const [leaders, setLeaders] = useState([]), [tab, setTab] = useState('all'), [loading, setLoading] = useState(false), [error, setError] = useState('');
+  const load = () => { setLoading(true); setError(''); fetch(API+'/leaderboard').then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(setLeaders).catch(() => setError('Sıralama yüklenemedi.')).finally(() => setLoading(false)); };
+  useEffect(() => { if (panel === 'leaderboard') load(); }, [panel]);
+  const rows = tab === 'live' ? state?.leaders || [] : leaders;
+  return <Dialog open={!!panel} onOpenChange={open => { if (!open) close(); }}><DialogContent className="game-dialog" data-testid={`${panel || 'game'}-modal`}>
+    <DialogHeader><div className="dialog-eyebrow" data-testid="panel-eyebrow">DEADZONE <span>/</span> {panel === 'leaderboard' ? 'HAYATTA KALANLAR' : 'TERCİHLER'}</div><DialogTitle className="dialog-title" data-testid="panel-title">{panel === 'leaderboard' ? 'SIRALAMA' : 'AYARLAR'}</DialogTitle><DialogDescription data-testid="panel-description">{panel === 'leaderboard' ? 'Westfall kayıtları' : inGame ? 'Online dünya devam ediyor.' : 'Operasyona hazırlan.'}</DialogDescription></DialogHeader>
+    {panel === 'leaderboard' ? <div className="leaderboard-content">
+      <div className="panel-tabs"><button data-testid="leaderboard-all-tab" className={tab === 'all' ? 'active' : ''} onClick={() => setTab('all')}><Trophy size={14} /> EN İYİ TURLAR</button><button data-testid="leaderboard-live-tab" className={tab === 'live' ? 'active' : ''} onClick={() => setTab('live')}><Radio size={14} /> CANLI</button><button onClick={load} data-testid="refresh-leaderboard" aria-label="Sıralamayı yenile" title="Yenile"><RefreshCw size={14} /></button></div>
+      {loading ? <p className="empty-state" data-testid="leaderboard-loading">Kayıtlar yükleniyor…</p> : error ? <p className="form-error" data-testid="leaderboard-error">{error}</p> : rows.length ? <div className="leaderboard-table" data-testid="leaderboard-table"><div className="table-head"><span>#</span><span>HAYATTA KALAN</span><span>ENFEKTE</span><span>PUAN</span></div>{rows.map((p, i) => <div className="leaderboard-row" data-testid={`leaderboard-row-${i}`} key={p.id}><span className={i === 0 ? 'first-place' : ''}>{String(i+1).padStart(2, '0')}</span><strong>{p.name}</strong><span>{p.kills}</span><b>{p.score.toLocaleString('tr-TR')}</b></div>)}</div> : <div className="empty-state" data-testid="leaderboard-empty"><Trophy size={36} strokeWidth={1} /><h3>{tab === 'live' ? 'Henüz sahada değilsin.' : 'İlk iz senin olsun.'}</h3><p>{tab === 'live' ? 'Oyuna katıldığında canlı sıralama burada.' : 'Tamamlanan turların puanları burada yer alacak.'}</p></div>}
+      <div className="panel-note" data-testid="score-rules"><span>ENFEKTE <b>+100</b></span><span>OYUNCU <b>+25</b></span></div>
+    </div> : <div className="settings-content">
+      <div className="settings-group-title"><Volume2 size={16} /><span>SES</span></div>
+      <div className="setting-row"><label htmlFor="sound-enabled">Ses efektleri</label><button id="sound-enabled" className={`toggle ${!muted ? 'on' : ''}`} role="switch" aria-checked={!muted} data-testid="settings-sound-toggle" onClick={() => setMuted(!muted)}><i /></button></div>
+      <div className="setting-row"><label htmlFor="sound-volume">Efekt seviyesi</label><div className="range-field"><input data-testid="settings-volume" id="sound-volume" type="range" min="0" max="1" step="0.05" value={volume} onChange={e => setVolume(Number(e.target.value))} /><span data-testid="volume-value">{Math.round(volume*100)}%</span></div></div>
+      <div className="settings-group-title"><Monitor size={16} /><span>GÖRÜNTÜ</span></div>
+      <div className="setting-row"><label>Grafik kalitesi</label><div className="segmented"><button data-testid="quality-auto" className={quality === 'auto' ? 'active' : ''} onClick={() => setQuality('auto')}>Otomatik</button><button data-testid="quality-performance" className={quality === 'low' ? 'active' : ''} onClick={() => setQuality('low')}>Akıcı</button><button data-testid="quality-high" className={quality === 'high' ? 'active' : ''} onClick={() => setQuality('high')}>Yüksek</button></div></div>
+      <div className="settings-group-title"><Crosshair size={16} /><span>KONTROLLER</span></div><div className="control-list" data-testid="settings-controls"><span>Hareket <b><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></b></span><span>Ateş <kbd>SOL TIK</kbd></span><span>Koşu <kbd>SHIFT</kbd></span><span>Şarjör <kbd>R</kbd></span><span>Sıralama <kbd>TAB</kbd></span><span>Menü <kbd>ESC</kbd></span><span data-testid="zoom-control-hint">Yakınlaştırma <kbd>TEKERLEK</kbd></span></div>
+      <div className="settings-actions"><Button className="panel-primary" data-testid="settings-done" onClick={close}>{inGame ? 'OYUNA DÖN' : 'TAMAM'}</Button>{inGame && <Button variant="ghost" className="leave-button" data-testid="leave-game-button" onClick={leave}><LogOut size={15} /> LOBİYE DÖN</Button>}</div>
+      <a href="/audio/CREDITS.txt" target="_blank" rel="noreferrer" className="audio-credits" data-testid="audio-credits-link">Ses kaynakları ve lisanslar ↗</a>
+    </div>}
+  </DialogContent></Dialog>;
+};

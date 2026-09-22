@@ -1,0 +1,36 @@
+DEADZONE — Ses kaynakları / Audio credits
+
+AK-47, AK-117, AK-107, M4A1 and AA-12 audio:
+The Free Firearm Sound Library, recorded by Ben Jaszczak, Brian Nelson,
+Kevin Heras and Matthew Nanney. CC0 1.0 Public Domain Dedication.
+https://opengameart.org/content/the-free-firearm-sound-library
+https://creativecommons.org/publicdomain/zero/1.0/
+AK-47: C_28P.wav, actual near-microphone AK-47 shot.
+M4A1: D_32P.wav, AR-15/M4-family .223 / 5.56 recording.
+AK-117 and AK-107: edited and pitch-varied AK-47 recordings (C_31P, C_28P),
+not claimed to be separate real recordings of those exact models.
+AA-12: adapted Benelli Nova 12-gauge recording O_21P, not an AA-12 recording.
+Edits: transient trimming, mono conversion, level normalization, short tail fades.
+
+M134 Minigun:
+minigun_ver1.wav by rob762x51, real M134 burst recording (200 ft distance).
+https://freesound.org/people/rob762x51/sounds/85246/
+CC0 1.0. Used high-quality preview, cropped a burst for looping, normalized.
+
+ALEV-21 flamethrower:
+Blowtorch and heating #0931, Joseph SARDIN / BigSoundBank.
+https://bigsoundbank.com/blowtorch-and-heating-s0931.html
+CC0 1.0. Adapted a real gas blowtorch recording, looped and normalized;
+not a recording of an actual military flamethrower.
+
+RPG-7 launch, LAV-6 launch, explosion and mechanical reload effects:
+Q009's weapon sounds, by Q009, uploaded by Calinou.
+https://opengameart.org/content/q009s-weapon-sounds
+License: Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+Sources: rlauncher.ogg, glauncher3.ogg, explosion.ogg, weapswitch.ogg.
+Converted to mono WAV, normalized and tail-faded. The adapted files
+rocket.wav, lava.wav, explosion.wav and reload.wav are distributed under
+the SAME CC BY-SA 3.0 license. These are designed sound effects, not literal
+recordings of these exact weapons. LAV-6 is a fictional lava launcher.
+See Q009-LICENSE.txt for the supplied license text.

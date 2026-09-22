@@ -1,0 +1,162 @@
+{
+  "project_name": "Zombi Salgını: Kıyamet Şehri (Zombie Survival Multiplayer)",
+  "language": "Turkish (tr-TR)",
+  "app_type": "3d_experience",
+  "design_context": "Post-Apocalyptic Tactical Isometric Multiplayer Survival",
+  "emotional_archetype": "Grim Tactical Survival (Dark, Urgent, High Contrast)",
+  "typography": {
+    "headline_font": "Bebas Neue, Impact, sans-serif",
+    "subheading_font": "Rajdhani, Oswald, sans-serif",
+    "body_font": "Inter, system-ui, sans-serif",
+    "mono_font": "JetBrains Mono, Courier New, monospace",
+    "hierarchy": {
+      "h1_title": "text-4xl sm:text-5xl font-black uppercase tracking-wider text-red-500 drop-shadow-[0_4px_12px_rgba(230,57,70,0.5)]",
+      "h2_subtitle": "text-2xl sm:text-3xl font-bold tracking-tight text-slate-100",
+      "h3_card_title": "text-lg sm:text-xl font-semibold tracking-wide text-amber-400 uppercase",
+      "hud_data": "font-mono text-sm sm:text-base font-extrabold tracking-widest text-emerald-400",
+      "label": "text-xs font-bold uppercase tracking-widest text-slate-400"
+    }
+  },
+  "colors": {
+    "background_dark": "#0A0C10",
+    "surface_dark": "#12161F",
+    "surface_accent": "#1E2430",
+    "border_tactical": "#2A3342",
+    "blood_red": "#DC2626",
+    "zombie_lime": "#84CC16",
+    "warning_amber": "#F59E0B",
+    "ammo_cyan": "#06B6D4",
+    "text_primary": "#F8FAFC",
+    "text_secondary": "#94A3B8",
+    "text_muted": "#64748B",
+    "fog_color": "#08090C",
+    "gradients": {
+      "blood_overlay": "radial-gradient(circle, rgba(220,38,38,0.15) 0%, rgba(10,12,16,0.95) 100%)",
+      "lobby_vignette": "linear-gradient(180deg, rgba(10,12,16,0.85) 0%, rgba(18,22,31,0.95) 100%)",
+      "health_bar": "linear-gradient(90deg, #EF4444 0%, #DC2626 100%)",
+      "stamina_bar": "linear-gradient(90deg, #EAB308 0%, #CA8A04 100%)"
+    }
+  },
+  "visual_enhancers": {
+    "card_style": "bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-lg shadow-2xl shadow-black/80 p-5",
+    "hud_panel": "bg-slate-950/80 border border-slate-800 backdrop-blur-md rounded-md p-3 shadow-lg",
+    "button_primary": "bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-black uppercase tracking-wider px-6 py-3 rounded-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-red-900/40 border border-red-400/30 cursor-pointer",
+    "button_secondary": "bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-200 font-bold uppercase tracking-wider px-4 py-2 rounded-md transition-all border border-slate-600 cursor-pointer",
+    "weapon_card_selected": "border-2 border-red-500 bg-red-950/30 shadow-[0_0_20px_rgba(220,38,38,0.3)] scale-[1.02]",
+    "noise_overlay": "pointer-events-none opacity-20 fixed inset-0 z-50 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"
+  },
+  "three_js_game_engine": {
+    "camera_type": "OrthographicCamera (Isometric) or PerspectiveCamera low-angle isometric follow (Offset: X: 18, Y: 22, Z: 18)",
+    "controls": "WASD for movement, Mouse position in 3D world plane for player rotation & aiming, Left Click to Shoot, R to Reload, Shift to Sprint",
+    "lighting": {
+      "ambient": "Directional/Ambient intensity ~0.35 (Dark survival atmosphere)",
+      "sun_light": "Directional light casting real-time shadows with soft shadow maps",
+      "player_flashlight": "PointLight or SpotLight attached to player mesh pointing towards crosshair for fog-of-war effect"
+    },
+    "fog": "THREE.FogExp2('#08090C', 0.025) for limited visual range & atmosphere",
+    "procedural_town_map": {
+      "tile_size": "Large grid scale (~300x300 units) catering to high-density exploration and up to 200 player instances",
+      "elements": [
+        "Asphalt Road Network with yellow dividing lines & damaged cracks",
+        "Grass Ground Tiles with high-contrast turf texture",
+        "Abandoned Houses & Wooden Sheds (Ağaç Evler & Harabeler) with collision boxes",
+        "Pine Trees & Oak Trees (Ağaçlar) randomly scattered for cover",
+        "Wooden Fences, Barrels (Variller), Brick Walls, Sandbags",
+        "Supply Crates (Mühimmat Sandıkları) offering ammo drops and score bonuses",
+        "Blood Decals on ground upon zombie/player kills"
+      ]
+    },
+    "weapons_definition": [
+      {
+        "id": "ak47",
+        "name": "AK-47 Kalashnikov",
+        "type": "Tüfek (Rifle)",
+        "damage": 35,
+        "fire_rate": "Orta (Medium)",
+        "mag_size": 30,
+        "range": "Uzun (Long)",
+        "description": "Yüksek hasarlı klasik Sovyet taarruz tüfeği.",
+        "color_accent": "#DC2626"
+      },
+      {
+        "id": "ak117",
+        "name": "AK-117 Tactical",
+        "type": "Seri Tüfek (Fast Assault)",
+        "damage": 26,
+        "fire_rate": "Çok Hızlı (Very Fast)",
+        "mag_size": 35,
+        "range": "Orta (Medium)",
+        "description": "Yüksek atış hızına ve düşük tepmeye sahip modern assault rifle.",
+        "color_accent": "#3B82F6"
+      },
+      {
+        "id": "ak107",
+        "name": "AK-107 Precision",
+        "type": "Dengeli Taarruz (Balanced Rifle)",
+        "damage": 30,
+        "fire_rate": "Yüksek (High)",
+        "mag_size": 30,
+        "range": "Uzun (Long)",
+        "description": "Dengeli tepme mekanizması ile hassas uzun menzilli atışlar.",
+        "color_accent": "#10B981"
+      },
+      {
+        "id": "shotgun",
+        "name": "Otomatik Fişek Atan Tüfek (Auto Shotgun)",
+        "type": "Pompalı / Fişekli (Shotgun)",
+        "damage": 75,
+        "fire_rate": "Yavaş (Slow)",
+        "mag_size": 8,
+        "range": "Yakın (Short Spread)",
+        "description": "Yakın mesafede zombileri ve düşmanları darmadağın eden saçma saçan fişekli tüfek.",
+        "color_accent": "#F59E0B"
+      }
+    ]
+  },
+  "ui_components_structure": {
+    "lobby_overlay": {
+      "title": "ZOMBİ SALGINI: KIAMET ŞEHRİ",
+      "subtitle": "Çok Oyunculu Online Hayatta Kalma Oyunu",
+      "nickname_input": "Kullanıcı Adı (Takma Ad)",
+      "weapon_selector": "Silahını Seç (AK47, AK117, AK107, Otomatik Fişek Atan Tüfek)",
+      "start_button": "OYUNA BAŞLA (START GAME)",
+      "server_stats": "Online Oyuncu: 184 / 200 | Gecikme: 24ms | Dost Ateşi: AÇIK (Friendly Fire ON)"
+    },
+    "hud_elements": {
+      "health_bar": "CAN (HEALTH) - Dinamik Kırmızı Bar + %100 Değeri",
+      "stamina_bar": "DAYANIKLILIK (STAMINA) - Sarı Bar (Koşma için)",
+      "ammo_counter": "MERMİ (AMMO) - Mermi Sayısı / Şarjör Deposu (Örn: 30 / 120) + Reload (R) Hatırlatıcısı",
+      "score_panel": "SKOR & LEŞ (SCORE & KILLS) - Zombi Leşi, Oyuncu Leşi, Toplam Puan",
+      "minimap_radar": "MİNİ HARİTA (MINIMAP) - Yuvarlak Radar, Oyuncu Yönü, Zombi Kırmızı Noktaları, Mühimmat Simgeleri",
+      "crosshair": "ÖZEL HEDEF GÖSTERGESİ (CUSTOM CROSSHAIR) - Fare Takip Eden Kırmızı/Yeşil Nişangah",
+      "leaderboard_modal": "LİDERLİK TABLOSU (TAB Key) - En Yüksek Skorlu Oyuncular Listesi & Ping",
+      "kill_feed": "ÖLDÜRME AKIŞI (KILL FEED) - Kim Kimi Öldürdü Bildirimleri (Dost Ateşi Uyarısı Dahil)",
+      "audio_settings_modal": "AYARLAR & SES (SETTINGS & SOUND) - Efekt, Müzik, Hassasiyet Kontrolleri"
+    },
+    "game_over_modal": "ÖLDÜNÜZ! (YOU DIED) - Yeniden Doğma Sayacı (Respawn Button), Katil İsmi, Kazanılan Puan Özeti"
+  },
+  "instructions_to_main_agent": [
+    "1. Build the frontend in React + Three.js + Tailwind CSS with dark tactical survival aesthetic.",
+    "2. Ensure all UI labels are in TURKISH as requested by the user.",
+    "3. Provide realistic low-poly 3D models or procedural Three.js meshes for the player character (with weapon model in hands), zombies (green/decaying texture, glowing eyes), pine trees, wooden houses, roads, fences, and crates.",
+    "4. Implement smooth WASD movement, mouse aiming with 3D raycasting onto ground plane, left-click shooting with muzzle flash particles, projectile/hitscan tracer rays, impact hit effects, and zombie AI chasing nearest player.",
+    "5. Implement real WebSocket or simulated high-density multiplayer sync (displaying up to 200 dynamic player dots/entities, friendly fire combat, dynamic killfeed, and real-time score updates).",
+    "6. Weapons MUST include all 4 distinct firearms specified: AK47, AK117, AK107, and Otomatik Fişek Atan Tüfek (Auto Shotgun) with distinct stats, sound effects (web audio API synth or ambient audio), recoil, and bullet spread.",
+    "7. Include comprehensive sound settings (Ses Efektleri, Müzik, Nişan Hassasiyeti).",
+    "8. Maintain data-testid attributes on all interactive UI controls, weapon cards, lobby inputs, HUD panels, leaderboard buttons, and audio toggles for robust automated testing."
+  ],
+  "testing_testids": {
+    "nickname_input": "data-testid=\"nickname-input\"",
+    "weapon_card_ak47": "data-testid=\"weapon-card-ak47\"",
+    "weapon_card_ak117": "data-testid=\"weapon-card-ak117\"",
+    "weapon_card_ak107": "data-testid=\"weapon-card-ak107\"",
+    "weapon_card_shotgun": "data-testid=\"weapon-card-shotgun\"",
+    "start_game_button": "data-testid=\"start-game-button\"",
+    "hud_health_bar": "data-testid=\"hud-health-bar\"",
+    "hud_ammo_count": "data-testid=\"hud-ammo-count\"",
+    "hud_score_count": "data-testid=\"hud-score-count\"",
+    "leaderboard_toggle": "data-testid=\"leaderboard-toggle\"",
+    "settings_modal_button": "data-testid=\"settings-modal-button\"",
+    "respawn_button": "data-testid=\"respawn-button\""
+  }
+}
